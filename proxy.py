@@ -7,7 +7,7 @@ from datetime import datetime
 
 PROXY_PORT = 8080
 
-WEB_SERVER_IP = "192.168.100.113"   # GANTI
+WEB_SERVER_IP = "192.168.100.113"
 WEB_SERVER_PORT = 8000
 
 CACHE_DIR = "cache"
@@ -85,6 +85,11 @@ def receive_all(sock):
 
 
 def handle_client(client_socket, addr):
+
+    print(
+        f"[THREAD-{threading.get_ident()}] "
+        f"Handling {addr}"
+    )
 
     start_time = time.time()
 
@@ -264,7 +269,7 @@ def start_proxy():
     )
 
     proxy.bind(
-        ("", PROXY_PORT)
+        ("192.168.100.5", PROXY_PORT)
     )
 
     proxy.listen(20)

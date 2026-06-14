@@ -50,6 +50,11 @@ def load_error_page(code):
 
 def handle_http(conn, addr):
 
+    print(
+        f"[THREAD-{threading.get_ident()}] "
+        f"Handling {addr}"
+    )
+
     try:
 
         request = conn.recv(8192).decode(errors="ignore")
@@ -131,6 +136,7 @@ def handle_http(conn, addr):
         print("HTTP ERROR:", e)
 
         try:
+
             body = load_error_page(500)
 
             response = build_response(
@@ -158,7 +164,8 @@ def http_server():
         1
     )
 
-    server.bind(("", HTTP_PORT))
+    server.bind(("192.168.100.113", HTTP_PORT))
+
     server.listen(20)
 
     print(f"[HTTP] Listening on {HTTP_PORT}")
@@ -178,7 +185,9 @@ def udp_server():
 
     server = socket(AF_INET, SOCK_DGRAM)
 
-    server.bind(("", UDP_PORT))
+    server.bind(
+        ("192.168.100.113", UDP_PORT)
+    )
 
     print(f"[UDP] Listening on {UDP_PORT}")
 
@@ -186,7 +195,16 @@ def udp_server():
 
         data, addr = server.recvfrom(4096)
 
-        server.sendto(data, addr)
+        print(
+            "UDP RECEIVED:",
+            data,
+            addr
+        )
+
+        server.sendto(
+            data,
+            addr
+        )
 
 
 if __name__ == "__main__":
